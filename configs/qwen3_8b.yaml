@@ -1,0 +1,79 @@
+project:
+  name: sae_latent_reasoning
+  seed: 0
+  output_dir: results/qwen3_8b
+
+data:
+  raw_path: data/raw/math_problems.jsonl
+  cots_path: results/qwen3_8b/cots.jsonl
+  token_features_path: results/qwen3_8b/token_features_layer18_topk50.jsonl
+  sample_features_path: results/qwen3_8b/sample_features_layer18_topk50.npz
+  sample_metadata_path: results/qwen3_8b/sample_metadata_layer18_topk50.jsonl
+  selected_X_path: results/qwen3_8b/selected_X_J100.npz
+  selected_features_path: results/qwen3_8b/selected_features_J100.json
+
+lmstudio:
+  base_url: http://127.0.0.1:1234/v1
+  api_key: lm-studio
+  model: qwen/qwen3-8b
+  temperature: 0.2
+  top_p: 0.95
+  max_tokens: 8192
+  max_tokens_by_dataset:
+    math500: 32768
+  timeout_seconds: 3600
+  seed: 0
+
+model:
+  name: Qwen/Qwen3-8B-Base
+  generation_name: qwen/qwen3-8b
+  dtype: bfloat16
+  device: cuda
+  layer: 18
+  max_new_tokens: 8192
+  math_max_new_tokens: 32768
+  temperature: 0.2
+  top_p: 0.95
+
+sae:
+  model_name: Qwen/Qwen3-8B-Base
+  sae_repo: Qwen/SAE-Res-Qwen3-8B-Base-W64K-L0_50
+  repo: Qwen/SAE-Res-Qwen3-8B-Base-W64K-L0_50
+  layer: 18
+  top_k: 50
+  d_sae: 65536
+  token_chunk_size: 128
+  forward_chunk_size: 512
+  extraction_text: reasoning_only
+  sample_aggregation: all_token_mean
+  device: cuda
+  dtype: bfloat16
+
+dcrl:
+  selected_X_path: results/qwen3_8b/selected_X_J100.npz
+  selected_features_path: results/qwen3_8b/selected_features_J100.json
+  fits_dir: results/qwen3_8b/fits
+  model_selection_path: results/qwen3_8b/model_selection.csv
+  J: 100
+  min_firing_rate: 0.03
+  max_firing_rate: 0.50
+  max_abs_corr: 0.80
+  relaxed_max_abs_corr: 0.90
+  K_grid: [6, 7]
+  seeds: [0, 1, 2]
+  max_iter: 100
+  tol: 1.0e-5
+  ridge: 1.0e-4
+  l1_gate: [0.001, 0.005]
+  l1_mag: [0.005]
+  initialization: varimax_q
+  gate_threshold: [0.7]
+  mag_threshold: [0.7]
+  proximal_lr_gate: [0.05]
+  proximal_lr_mag: [0.05]
+
+steering:
+  coefficients: [16, 32, 64, 96]
+  max_new_tokens: 128
+  examples_per_side: 8
+  layer: 18
