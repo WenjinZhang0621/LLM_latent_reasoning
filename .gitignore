@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.DS_Store
+
+# Large generated artifacts.
+data/raw/
+data/generated/
+data/features/
+results/**/*.jsonl
+results/**/*.npz
+results/**/*.pt
+results/**/*.pth
+results/**/*.safetensors
+results/**/checkpoints/
+results/**/logs/
+results/**/*.log
+
+# Hugging Face / model caches.
+.cache/
+hf_cache/
