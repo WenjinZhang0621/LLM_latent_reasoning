@@ -37,6 +37,8 @@ The workflow is organized into modular scripts:
 5. `scripts/run_steering.py` - residual or SAE-basis steering evaluation.
 6. `scripts/run_microbenchmark.sh` - small benchmark driver for throughput,
    memory, and storage calibration.
+7. `slurm/ginsburg_microbenchmark.sbatch` - template Slurm entry point for
+   institutional GPU benchmarking.
 
 For NVIDIA cloud execution, the intended environment starts from an NVIDIA NGC
 PyTorch container and installs pinned Python dependencies from
@@ -65,6 +67,13 @@ Run the benchmark on a CUDA machine:
 
 ```bash
 bash scripts/run_microbenchmark.sh --config configs/benchmark_small.yaml
+```
+
+Submit the benchmark on a Slurm-managed GPU cluster after adjusting account,
+partition, and module lines for the local environment:
+
+```bash
+sbatch slurm/ginsburg_microbenchmark.sbatch
 ```
 
 ## Expected GPU Workflow
@@ -102,6 +111,8 @@ sae_latent_reasoning/
     fit_latent_model.py
     run_steering.py
     run_microbenchmark.sh
+  slurm/
+    ginsburg_microbenchmark.sbatch
   configs/
     qwen3_8b.yaml
     benchmark_small.yaml
